@@ -2,6 +2,7 @@ const GDT = @import("kernel/global_descriptor_table.zig").GlobalDescriptorTable;
 
 const video_memory_start = 0xb8000;
 
+// TODO: abstract this out of here!
 // video memory works in the following way: each character in the screen is
 // dropped in 2 byte segments; upper 4 bits and lower 4 bits of the first
 // byte are the foreground and background colors of the character and then

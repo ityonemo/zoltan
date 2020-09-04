@@ -7,6 +7,9 @@ pub const segtype_t = u4;
 /// Segment Descriptor and their structures.
 pub const SegmentDescriptor = packed struct {
     // const values
+    pub const CS_TYPE: segflag_t = 0x9A;
+    pub const DS_TYPE: segflag_t = 0x92;
+
     const ADDR16B = 0x4;
     const ADDR32B = 0xC;
 

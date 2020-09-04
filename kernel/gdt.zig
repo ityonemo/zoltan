@@ -1,14 +1,12 @@
-usingnamespace @import("segment_descriptor.zig");
+const Segment = @import("segment_descriptor.zig").SegmentDescriptor;
 
-const CS_TYPE: segflag_t = 0x9A;
-const DS_TYPE: segflag_t = 0x92;
 const MiB = 1024 * 1024;
 
 pub const GlobalDescriptorTable = struct {
-    null_segment: SegmentDescriptor = SegmentDescriptor.new(0, 0, 0),
-    unused_segment: SegmentDescriptor = SegmentDescriptor.new(0, 0, 0),
-    code_segment: SegmentDescriptor = SegmentDescriptor.new(0, 64 * MiB, CS_TYPE),
-    data_segment: SegmentDescriptor = SegmentDescriptor.new(0, 64 * MiB, DS_TYPE),
+    null_segment: Segment = Segment.new(0, 0, 0),
+    unused_segment: Segment = Segment.new(0, 0, 0),
+    code_segment: Segment = Segment.new(0, 64 * MiB, Segment.CS_TYPE),
+    data_segment: Segment = Segment.new(0, 64 * MiB, Segment.DS_TYPE),
 
     // initializes the GDT for the operating system.
     pub fn init(self: *const GlobalDescriptorTable) void {

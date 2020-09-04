@@ -10,6 +10,8 @@ pub const SegmentDescriptor = packed struct {
     pub const CS_TYPE: segflag_t = 0x9A;
     pub const DS_TYPE: segflag_t = 0x92;
 
+    // internal constants referring to 32- and
+    // 64- bit addressing types
     const ADDR16B = 0x4;
     const ADDR32B = 0xC;
 
@@ -21,6 +23,8 @@ pub const SegmentDescriptor = packed struct {
     size_hi: u4        = 0,
     addr_hi: u8        = 0,
 
+    /// generates a segment descriptor struct based off of address,
+    /// size, and flags parameters.
     pub fn new(addr_: segaddr_t, size_: segsize_t, flags_: segflag_t) SegmentDescriptor {
         const addr_lo = @intCast(u24, addr_ & 0xFF_FFFF);
         const addr_hi = @intCast(u8, addr_ >> 24);
@@ -51,13 +55,16 @@ pub const SegmentDescriptor = packed struct {
         };
     }
 
+    /// calculates the 32-bit value of the segment address, reassembling it
+    /// from the awkward struct presented by the system.
     pub fn addr(self: *SegmentDescriptor) segaddr_t {
         const addr_lo_32 = @intCast(segaddr_t, self.addr_lo);
         const addr_hi_32 = @intCast(segaddr_t, self.addr_hi);
         return (addr_hi_32 << 24) | addr_lo_32;
     }
 
-    /// calculates the 32-bit value of the
+    /// calculates the 32-bit value of the segment size, reassembling it
+    /// from the awkward struct presented by the system.
     pub fn size(self: *SegmentDescriptor) segsize_t {
         const size_lo_32 = @intCast(segsize_t, self.size_lo);
         const size_hi_32 = @intCast(segsize_t, self.size_hi);

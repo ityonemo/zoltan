@@ -1,4 +1,4 @@
-const GDT = @import("kernel/gdt.zig").GlobalDescriptorTable;
+const GDT = @import("kernel/global_descriptor_table.zig").GlobalDescriptorTable;
 
 const video_memory_start = 0xb8000;
 

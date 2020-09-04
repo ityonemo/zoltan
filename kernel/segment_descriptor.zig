@@ -1,14 +1,11 @@
 /// Segment Descriptor Spec
-
-const assert = @import("std").debug.assert;
-
-const segsize_t = u32;
-const segaddr_t = u32;
-const segflag_t = u8;
-const segtype_t = u4;
+pub const segsize_t = u32;
+pub const segaddr_t = u32;
+pub const segflag_t = u8;
+pub const segtype_t = u4;
 
 /// Segment Descriptor and their structures.
-export const SegmentDescriptor = packed struct {
+pub const SegmentDescriptor = packed struct {
     // const values
     const ADDR16B = 0x4;
     const ADDR32B = 0xC;
@@ -21,7 +18,7 @@ export const SegmentDescriptor = packed struct {
     size_hi: u4        = 0,
     addr_hi: u8        = 0,
 
-    fn new(addr_: segaddr_t, size_: segsize_t, flags_: segflag_t) SegmentDescriptor {
+    pub fn new(addr_: segaddr_t, size_: segsize_t, flags_: segflag_t) SegmentDescriptor {
         const addr_lo = @intCast(u24, addr_ & 0xFF_FFFF);
         const addr_hi = @intCast(u8, addr_ >> 24);
         var size_adj : segsize_t = undefined;
@@ -51,14 +48,14 @@ export const SegmentDescriptor = packed struct {
         };
     }
 
-    fn addr(self: *SegmentDescriptor) segaddr_t {
+    pub fn addr(self: *SegmentDescriptor) segaddr_t {
         const addr_lo_32 = @intCast(segaddr_t, self.addr_lo);
         const addr_hi_32 = @intCast(segaddr_t, self.addr_hi);
         return (addr_hi_32 << 24) | addr_lo_32;
     }
 
     /// calculates the 32-bit value of the
-    fn size(self: *SegmentDescriptor) segsize_t {
+    pub fn size(self: *SegmentDescriptor) segsize_t {
         const size_lo_32 = @intCast(segsize_t, self.size_lo);
         const size_hi_32 = @intCast(segsize_t, self.size_hi);
         const size_all = (size_hi_32 << 16) | size_lo_32;
@@ -81,6 +78,11 @@ export const SegmentDescriptor = packed struct {
         }
     }
 };
+
+// ////////////////////////////////////////////////////////////////////////
+// TESTING
+
+const assert = @import("std").debug.assert;
 
 test "the new function places addr value as expected" {
     // address segment is split into high and low.

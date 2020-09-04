@@ -1,5 +1,4 @@
-const gdt = @import("kernel/gdt.zig");
-const x = gdt.go();
+usingnamespace @import("kernel/gdt.zig");
 
 const video_memory_start = 0xb8000;
 
@@ -7,7 +6,6 @@ const video_memory_start = 0xb8000;
 // dropped in 2 byte segments; upper 4 bits and lower 4 bits of the first
 // byte are the foreground and background colors of the character and then
 // the subsequent byte is the character itself.
-
 fn kprint(what : [] const u8) void {
   for (what) | char, idx | {
     var slot : usize = video_memory_start + idx * 2;
@@ -17,6 +15,12 @@ fn kprint(what : [] const u8) void {
 }
 
 export fn kernel_main(multiboot : *c_void, magicnumber : u32) void {
-  kprint("Hello Zoltan");
+  // create a global descriptor table value and obtain it.
+  const gdt = GlobalDescriptorTable{};
+  
+  // then initialize it
+  gdt.init();
+  kprint("Hello Zoltan-gdt");
+
   while (true) {}
 }

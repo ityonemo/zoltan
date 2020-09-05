@@ -10,6 +10,7 @@ pub fn build(b: *Builder) void {
        .abi = .none,
     });
     exe.addAssemblyFile("loader.s");
+    exe.addAssemblyFile("interrupts.s");
     exe.setLinkerScriptPath("kernel.ld");
 
     exe.install();

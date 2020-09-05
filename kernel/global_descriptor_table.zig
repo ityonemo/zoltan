@@ -8,11 +8,24 @@ pub const GlobalDescriptorTable = struct {
     code_segment: Segment = Segment.new(0, 64 * MiB, Segment.CS_TYPE),
     data_segment: Segment = Segment.new(0, 64 * MiB, Segment.DS_TYPE),
 
-    // initializes the GDT for the operating system.
+    pub const off_t = u16;
+
+    /// initializes the GDT for the operating system.
     pub fn init(self: *const GlobalDescriptorTable) void {
         asm volatile("lgdt (%%eax)"
           : [gdt_ptr] "={eax}" (self)
         );
+    }
+
+    /// returns the data segment offset
+    pub fn ds_offset(self: *const GlobalDescriptorTable) off_t {
+      var delta = @ptrToInt(&self.data_segment) - @ptrToInt(self);
+      return @intCast(off_t, delta);
+    }
+    /// returns the code segment offset
+    pub fn cs_offset(self: *const GlobalDescriptorTable) off_t {
+      var delta = @ptrToInt(&self.code_segment) - @ptrToInt(self);
+      return @intCast(off_t, delta);
     }
 };
 
